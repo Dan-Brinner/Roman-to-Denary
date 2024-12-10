@@ -17,49 +17,37 @@ The `roman_to_denary` function:
 
 ```c
 #include <stdio.h>
-#include <string.h>
 
-int value(char r) {
-    if (r == 'I')
-        return 1;
-    if (r == 'V')
-        return 5;
-    if (r == 'X')
-        return 10;
-    if (r == 'L')
-        return 50;
-    if (r == 'C')
-        return 100;
-    if (r == 'D')
-        return 500;
-    if (r == 'M')
-        return 1000;
-    return -1;
+int getvalue(char c) {
+    switch(c) {
+        case 'I': return 1;
+        case 'V': return 5;
+        case 'X': return 10;
+        case 'L': return 50;
+        case 'C': return 100;
+        case 'D': return 500;
+        case 'M': return 1000;
+        default: return 0;
+    }
 }
 
-int romanToDecimal(char* str) {
-    int res = 0;
-    int i = 0;
-    for (; str[i]; i++) {
-        int s1 = value(str[i]);
-        if (i + 1 < strlen(str)) {
-            int s2 = value(str[i + 1]);
-            if (s1 < s2) {
-                res -= s1;
-            } else {
-                res += s1;
-            }
+int romanToInt(char* s) {
+    int total = 0;
+    for(int i = 0; s[i] != '\0'; i++) {
+        int current = getvalue(s[i]);
+        int next = getvalue(s[i+1]);
+        if(current < next) {
+            total -= current; // Subtraction case (e.g., IV, IX)
         } else {
-            res += s1;
+            total += current; // Regular case (e.g., VI, VII)
         }
     }
-    return res;
+    return total;
 }
 
 int main() {
-    char str[15];
-    printf("Enter Roman Numeral: ");
-    scanf("%s", str);
-    printf("Integer form of Roman Numeral is %d \n", romanToDecimal(str));
+    char roman[] = "MCMXCIV";  // Example Roman numeral
+    int result = romanToInt(roman);
+    printf("The integer value of %s is: %d\n", roman, result);
     return 0;
 }
